@@ -1,0 +1,5 @@
+html
+versions
+*.o
+game
+tilesheet.png
