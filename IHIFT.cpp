@@ -32,6 +32,9 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Mouse.hpp>
 
+// Unix tools
+#include <unistd.h>
+
 #define WINDOW_START_WIDTH  1000
 #define WINDOW_START_HEIGHT 562
 
@@ -77,19 +80,40 @@ int main(int argc, char** argv)
 	std::puts("I Hope I Finish This");
 	std::puts("");
 
-    std::printf("IHIFT  Copyright (C) 2020  Baldwin, Josiah\n"
-    			"This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
+    std::puts("IHIFT  Copyright (C) 2020  Baldwin, Josiah\n"
+    			"This program comes with ABSOLUTELY NO WARRANTY; for details pass '-w'.\n"
     			"This is free software, and you are welcome to redistribute it\n"
-    			"under certain conditions; type `show c' for details.\n");
+    			"under certain conditions; pass '-c' for details.\n");
 
-	if (argc > 1 && std::strcmp(argv[1], "--help") == 0)
-		puts("Left mouse to fire basic shot.\n"
-			 "Space to fire burst\n"
-			 "WASD/Arrow keys to move\n"
-			 "Num 4 to delete all living projectiles.\n"
-			 "P to clear timers, (this is a debug feature.)");
+	if (argc > 1) {
+		char flags = 0;
+		int c;
+
+		opterr = 0;
+
+		while ((c = getopt(argc, argv, "hcw")) != -1)
+			switch (c) {
+				case 'h':
+					flags ^= 1 << 0;
+					puts("Left mouse to fire basic shot.\n"
+					 "Space to fire burst\n"
+					 "WASD/Arrow keys to move\n"
+					 "Num 4 to delete all living projectiles.\n"
+					 "P to clear timers, (this is a debug feature.)");
+					break;
+				case 'c':
+					flags ^= 1 << 1;
+					std::printf("TODO whatever the hell this \'%c\' argument is supposed to do.\n", 'c');
+					break;
+				case 'w':
+					flags ^= 1 << 2;
+					std::printf("TODO whatever the hell this \'%c\' argument is supposed to do.\n", 'w');
+					break;
+				default: break;
+			}
+	}
 	else
-		std::puts("--help for more info");
+		std::puts("Pass -h for more info");
 
 	Game game;
 	std::printf("Game init complete. Line %i\n", __LINE__);
