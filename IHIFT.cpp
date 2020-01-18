@@ -32,9 +32,6 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Mouse.hpp>
 
-// Unix tools
-#include <unistd.h>
-
 #define WINDOW_START_WIDTH  1000
 #define WINDOW_START_HEIGHT 562
 
@@ -75,6 +72,56 @@ struct Game {
 	void mouse_handle(sf::RenderWindow* window) noexcept;
 };
 
+static void argument_handling(char** argv)
+{
+	char flags = 0;
+
+	while (*argv != nullptr) {
+		if (**argv != '-') {
+			argv++;
+			continue;
+		}
+
+		// Remove leading '-'
+		(*argv)++;
+
+		while (**argv != '\0') {
+			switch(**argv) {
+				case 'h':
+					if (!(flags & 1 << 0)) {
+						flags ^= 1 << 0;
+						puts("Left mouse to fire basic shot.\n"
+						 "Space to fire burst\n"
+						 "WASD/Arrow keys to move\n"
+						 "Num 4 to delete all living projectiles.\n"
+						 "P to clear timers, (this is a debug feature.)");
+					}
+					break;
+				case 'c':
+					if (!(flags & 1 << 1)) {
+						flags ^= 1 << 1;
+						std::printf("TODO whatever the hell this \'%c\' argument is supposed to do.\n", 'c');
+					}
+					break;
+				case 'w':
+					if (!(flags & 1 << 2)) {
+						flags ^= 1 << 2;
+						std::printf("TODO whatever the hell this \'%c\' argument is supposed to do.\n", 'w');
+					}
+					break;
+				default: break;
+			}
+
+			// Get next character
+			(*argv)++;
+		}
+
+		// Get next string
+		argv++;
+
+	}
+}
+
 int main(int argc, char** argv)
 {
 	std::puts("I Hope I Finish This");
@@ -85,33 +132,8 @@ int main(int argc, char** argv)
     			"This is free software, and you are welcome to redistribute it\n"
     			"under certain conditions; pass '-c' for details.\n");
 
-	if (argc > 1) {
-		char flags = 0;
-		int c;
-
-		opterr = 0;
-
-		while ((c = getopt(argc, argv, "hcw")) != -1)
-			switch (c) {
-				case 'h':
-					flags ^= 1 << 0;
-					puts("Left mouse to fire basic shot.\n"
-					 "Space to fire burst\n"
-					 "WASD/Arrow keys to move\n"
-					 "Num 4 to delete all living projectiles.\n"
-					 "P to clear timers, (this is a debug feature.)");
-					break;
-				case 'c':
-					flags ^= 1 << 1;
-					std::printf("TODO whatever the hell this \'%c\' argument is supposed to do.\n", 'c');
-					break;
-				case 'w':
-					flags ^= 1 << 2;
-					std::printf("TODO whatever the hell this \'%c\' argument is supposed to do.\n", 'w');
-					break;
-				default: break;
-			}
-	}
+	if (argc > 1)
+		argument_handling(argv);
 	else
 		std::puts("Pass -h for more info");
 
