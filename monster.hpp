@@ -34,13 +34,13 @@ namespace MisterEggnog::IHIFT {
 
 class Projectile;
 
-/** Abstract Monster class.
+/** Monster class.
  * Call the various factory functions to get Monsters.
  */
 class Monster final : public sf::Sprite {
-	int health_;            //!< Current health of the monster.
-	sf::Vector2f area_;     //!< Current area of the monster.
-	std::shared_ptr<sf::Texture> texture_;
+	int health_;                            //!< Current health of the monster.
+	sf::Vector2f area_;                     //!< Current area of the monster.
+	std::shared_ptr<sf::Texture> texture_; //!< Texture of the monster.
 
 	/** Move the Monster.
 	* @arg reng: Random number generator.
