@@ -31,15 +31,13 @@ IHIFT::Monster::~Monster() = default;
 
 namespace {
 
-struct Slime_mover : public virtual IHIFT::Monster {
+struct Slime_mover {
 	char movement_pattern_;
 	int movement_period_;
 
 	Slime_mover() noexcept = default;
 
-	virtual ~Slime_mover() = default;
-
-	virtual sf::FloatRect move(std::mt19937& reng, const sf::Vector2f& player_position)
+	sf::FloatRect operator()(std::mt19937& reng, const sf::Vector2f& player_position, sf::Transformable& monster)
 	{
 		return sf::FloatRect();
 	}
@@ -76,16 +74,12 @@ struct Slime_mover : public virtual IHIFT::Monster {
 		return sf::FloatRect();
 	}*/
 
-struct Slime_attacker : public virtual IHIFT::Monster {
+struct Slime_attacker {
 	int base_damage_;
 	int offset_min_;
 	int offset_max_;
 
-	Slime_attacker() noexcept = default;
-
-	virtual ~Slime_attacker() = default;
-
-	virtual std::vector<IHIFT::Projectile> attack(std::mt19937& reng, const sf::Vector2f& player_position)
+	std::vector<IHIFT::Projectile> operator()(std::mt19937& reng, const sf::Vector2f& player_position, const sf::Transformable& monster)
 	{
 		std::vector<IHIFT::Projectile> projectiles;
 		std::uniform_int_distribution critical_offset(offset_min_, offset_max_);
@@ -95,11 +89,11 @@ struct Slime_attacker : public virtual IHIFT::Monster {
 
 		// Straight to player
 		if (pattern == 0) {
-			auto pointer_to_player = player_position - sf::Transformable::getPosition();
+			auto pointer_to_player = player_position - monster.getPosition();
 				pointer_to_player *= 0.1f / std::hypotf(pointer_to_player.x, pointer_to_player.y);
 //			printf("%f:%f", pointer_to_player.x, pointer_to_player.y);
 
-			auto projectile = IHIFT::Projectile(pointer_to_player, sf::Transformable::getPosition() + sf::Transformable::getScale() * 0.5f, base_damage_ + critical_offset(reng), false);
+			auto projectile = IHIFT::Projectile(pointer_to_player, monster.getPosition() + monster.getScale() * 0.5f, base_damage_ + critical_offset(reng), false);
 			projectile.setFillColor(sf::Color::Green);
 			projectile.setScale(4, 2);
 			projectile.setRotation(std::atan2(pointer_to_player.x, pointer_to_player.y) * ONE_EIGHTY_DIV_PI);
@@ -108,7 +102,7 @@ struct Slime_attacker : public virtual IHIFT::Monster {
 
 		// Ray
 		if (pattern == 1) {
-			auto pointer_to_player = player_position - sf::Transformable::getPosition();
+			auto pointer_to_player = player_position - monster.getPosition();
 //			pointer_to_player
 		}
 
@@ -118,26 +112,23 @@ struct Slime_attacker : public virtual IHIFT::Monster {
 
 }
 
-// Voldemort types, lol
-
-std::unique_ptr<IHIFT::Monster> IHIFT::Monster::slime_factory(std::mt19937& reng)
+IHIFT::Monster IHIFT::Monster::slime_factory(std::mt19937& reng)
 {
-	struct Slime final : public Slime_mover, public Slime_attacker {
-		~Slime() = default;
-	};
-
-	std::unique_ptr<Slime> monster = std::make_unique<Slime>();
+	Monster slime;
 
 	// General monster setup.
-	monster->texture_ = IHIFT::get_tile_texture(12, 1);
-	monster->setTexture(*monster->texture_);
-	monster->setScale(2, 3);
-	monster->setColor(sf::Color::Green);
+	slime.texture_ = IHIFT::get_tile_texture(12, 1);
+	slime.setTexture(*slime.texture_);
+	slime.setScale(2, 3);
+	slime.setColor(sf::Color::Green);
 
 	// Setup attack damage.
-	monster->base_damage_ = 4;
-	monster->offset_min_ = 1;
-	monster->offset_max_ = 2;
+	Slime_attacker attack{4, 1, 2};
+	slime.attack_fn_ = attack;
 
-	return monster;
+	// Setup move
+	Slime_mover mover;
+	slime.move_fn_ = mover;
+
+	return slime;
 }

@@ -43,7 +43,7 @@ struct Game {
 	std::unordered_map<int, sf::FloatRect> areas_; //!< List of area's entities and id's. Negative one is the id of the player.
 	std::unordered_map<int, IHIFT::entity_type> types_; //!< List of entities.
 	std::map<int, IHIFT::Projectile> projectiles_; //!< List of currently living Projectiles.
-	std::map<int, std::unique_ptr<IHIFT::Monster>> monsters_;
+	std::map<int, IHIFT::Monster> monsters_;
 
 	Game() noexcept;
 
@@ -154,7 +154,7 @@ Game::Game() noexcept
 	types_[-1] = IHIFT::PLAYER_TYPE;
 	auto id = IHIFT::new_id();
 	monsters_[id] = std::move(IHIFT::Monster::slime_factory(reng_));
-	monsters_[id]->setPosition(WINDOW_START_WIDTH / 2, WINDOW_START_HEIGHT /2);
+	monsters_[id].setPosition(WINDOW_START_WIDTH / 2, WINDOW_START_HEIGHT /2);
 }
 
 	
@@ -186,7 +186,7 @@ void Game::draw(sf::RenderWindow* window) noexcept
 	}
 
 	for (auto& i: monsters_) {
-		window->draw(*(i.second));
+		window->draw(i.second);
 	}
 
 	window->draw(player_);
@@ -200,22 +200,24 @@ void Game::move_entities(sf::RenderWindow* window) noexcept
 		sf::Vector2f offset;
 		areas_[-1] = player_.move(offset);
 
+#if 0
 		if (0) {
 			auto view_port = window->getView();
 			view_port.move(offset);
 			window->setView(view_port);
 		}
+#endif
 	}
 
 	{
 		sf::Vector2f player_position = player_.getPosition();
 		for (auto& i: monsters_) {
 //			i.second->move(reng_, player_position);
-			auto projectiles = i.second->attack(reng_, player_position);
+			auto projectiles = i.second.attack(reng_, player_position);
 
 			for (auto i = 0U; i < projectiles.size(); i++) {
 				int id = IHIFT::new_id();
-				projectiles_.try_emplace(id, std::move(projectiles[i]));
+				projectiles_.try_emplace(id, projectiles[i]);
 			}
 		}
 	}

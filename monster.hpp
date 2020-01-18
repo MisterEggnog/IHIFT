@@ -18,6 +18,7 @@
 #ifndef MISTEREGGNOG_IHIFT_MONSTER_HPP_INCLUDED
 #define MISTEREGGNOG_IHIFT_MONSTER_HPP_INCLUDED
 
+#include <functional>
 #include <memory>
 #include <random>
 #include <vector>
@@ -36,21 +37,35 @@ class Projectile;
 /** Abstract Monster class.
  * Call the various factory functions to get Monsters.
  */
-class Monster : public sf::Sprite {
-protected:
+class Monster final : public sf::Sprite {
 	int health_;            //!< Current health of the monster.
 	sf::Vector2f area_;     //!< Current area of the monster.
 	std::shared_ptr<sf::Texture> texture_;
 
+	/** Move the Monster.
+	* @arg reng: Random number generator.
+	* @arg player_position: Current position of the Player.
+	* @return Current area of the Monster.
+	*/
+	std::function<sf::FloatRect(std::mt19937&, const sf::Vector2f&, sf::Transformable& monster)> move_fn_;
+
+	/** Fire some Projectiles.
+	* @arg reng: Random number generator.
+	* @arg player_position: Current position of the Player.
+	* @return Vector of Projectiles.
+	*/
+	std::function<std::vector<Projectile>(std::mt19937&, const sf::Vector2f, const sf::Transformable& monster)> attack_fn_;
+
 	Monster(int health, sf::Vector2f area) noexcept : health_(health), area_(area) {}
-	Monster() noexcept : Monster(0, sf::Vector2f(0,0)) {}
 	Monster& operator=(const Monster&) = delete;
 	Monster(const Monster&) = delete;
-	Monster(Monster&&) = delete;
-	Monster& operator=(Monster&&) noexcept = delete;
 public:
 
-	virtual ~Monster();
+	~Monster() final;
+
+	Monster() noexcept : Monster(0, sf::Vector2f(0,0)) {}
+	Monster(Monster&&) noexcept = default;
+	Monster& operator=(Monster&&) noexcept = default;
 
 	/** Reduce entity health.
 	* @arg damage_amount: How much health the monster loses.
@@ -81,20 +96,26 @@ public:
 	* @arg player_position: Current position of the Player.
 	* @return Current area of the Monster.
 	*/
-	virtual sf::FloatRect move(std::mt19937& reng, const sf::Vector2f& player_position) = 0;
+	sf::FloatRect move(std::mt19937& reng, const sf::Vector2f& player_position)
+	{
+		return move_fn_(reng, player_position, *this);
+	}
 
 	/** Fire some Projectiles.
 	* @arg reng: Random number generator.
 	* @arg player_position: Current position of the Player.
 	* @return Vector of Projectiles.
 	*/
-	virtual std::vector<Projectile> attack(std::mt19937& reng, const sf::Vector2f& player_position) = 0;
+	std::vector<Projectile> attack(std::mt19937& reng, const sf::Vector2f& player_position)
+	{
+		return attack_fn_(reng, player_position, *this);
+	}
 
 	/** Build basic slime monster.
 	* @arg reng: Random number generator.
 	* @return Slime monster.
 	*/
-	static std::unique_ptr<Monster> slime_factory(std::mt19937& reng);
+	static Monster slime_factory(std::mt19937& reng);
 	
 };
 
