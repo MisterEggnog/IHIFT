@@ -81,22 +81,6 @@ public:
 	*/
 	sf::FloatRect move(sf::Vector2f& offset);
 
-	/** Reposition player.
-	* Repositions the player at x,y.
-	* @arg position_vector: x,y position.
-	*/
-	void set_position(sf::Vector2f position_vector) noexcept;
-
-	/** Reposition player.
-	* Repositions the player at x,y.
-	* @arg x: X position.
-	* @arg y: Y position.
-	*/
-	void set_position(float x, float y) noexcept
-	{
-		set_position(sf::Vector2f(x, y));
-	}
-
 	/** Get the rectangle enclosed by the Player.
 	* @return The area & location of the Player.
 	*/

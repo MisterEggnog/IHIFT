@@ -95,11 +95,6 @@ sf::FloatRect Player::move(sf::Vector2f& offset)
 	return get_area();
 }
 
-void Player::set_position(sf::Vector2f position_vector) noexcept
-{
-	sf::Transformable::setPosition(position_vector);
-}
-
 static constexpr int BASIC_FIRE_COOLDOWN = 30; //!< How long does basic shot take to cooldown.
 static constexpr int BURST_WAIT_TIME = 45*60;
 
