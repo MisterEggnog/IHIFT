@@ -47,7 +47,7 @@ class Monster final : public sf::Sprite {
 	* @arg player_position: Current position of the Player.
 	* @return Current area of the Monster.
 	*/
-	std::function<sf::FloatRect(std::mt19937&, const sf::Vector2f&, sf::Transformable& monster)> move_fn_;
+	std::function<void(std::mt19937&, const sf::Vector2f&, sf::Transformable& monster)> move_fn_;
 
 	/** Fire some Projectiles.
 	* @arg reng: Random number generator.
@@ -59,6 +59,8 @@ class Monster final : public sf::Sprite {
 	Monster(int health, sf::Vector2f area) noexcept : health_(health), area_(area) {}
 	Monster& operator=(const Monster&) = delete;
 	Monster(const Monster&) = delete;
+
+	sf::FloatRect get_area() const;
 public:
 
 	~Monster() final;
@@ -98,7 +100,8 @@ public:
 	*/
 	sf::FloatRect move(std::mt19937& reng, const sf::Vector2f& player_position)
 	{
-		return move_fn_(reng, player_position, *this);
+		move_fn_(reng, player_position, *this);
+		return get_area();
 	}
 
 	/** Fire some Projectiles.

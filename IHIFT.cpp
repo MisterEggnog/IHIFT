@@ -130,7 +130,7 @@ int main(int argc, char** argv)
     std::puts("IHIFT  Copyright (C) 2020  Baldwin, Josiah\n"
     			"This program comes with ABSOLUTELY NO WARRANTY; for details pass '-w'.\n"
     			"This is free software, and you are welcome to redistribute it\n"
-    			"under certain conditions; pass '-c' for details.\n");
+    			"under certain conditions; pass '-c' for details.");
 
 	if (argc > 1)
 		argument_handling(argv);
@@ -157,7 +157,6 @@ Game::Game() noexcept
 	monsters_[id].setPosition(WINDOW_START_WIDTH / 2, WINDOW_START_HEIGHT /2);
 }
 
-	
 void Game::game_loop(sf::RenderWindow* window) noexcept
 {
 	while (window->isOpen()) {

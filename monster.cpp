@@ -37,9 +37,8 @@ struct Slime_mover {
 
 	Slime_mover() noexcept = default;
 
-	sf::FloatRect operator()(std::mt19937& reng, const sf::Vector2f& player_position, sf::Transformable& monster)
+	void operator()(std::mt19937& reng, const sf::Vector2f& player_position, sf::Transformable& monster)
 	{
-		return sf::FloatRect();
 	}
 };
 /*	sf::FloatRect move(std::mt19937& reng, const sf::Vector2f& player_position) final
