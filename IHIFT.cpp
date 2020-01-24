@@ -50,17 +50,17 @@ struct Game {
 	/** Draw, execute function.
 	* This function delegates work to other functions, except for events.
 	*/
-	void game_loop(sf::RenderWindow* window) noexcept;
+	void game_loop(sf::RenderWindow& window) noexcept;
 
 	/** Render function
 	* @arg window: Window drawn to.
 	*/
-	void draw(sf::RenderWindow* window) noexcept;
+	void draw(sf::RenderWindow& window) noexcept;
 
 	/** Moves all entities.
 	* Also dispose of old Projectiles.
 	*/
-	void move_entities(sf::RenderWindow* window) noexcept;
+	void move_entities(sf::RenderWindow& window) noexcept;
 
 	/** Handle keyboard operations.
 	*/
@@ -69,7 +69,7 @@ struct Game {
 	/** Handles mouse operations.
 	* @arg window: Window to determine where the mouse is operating.
 	*/
-	void mouse_handle(sf::RenderWindow* window) noexcept;
+	void mouse_handle(sf::RenderWindow& window) noexcept;
 };
 
 static void argument_handling(char** argv)
@@ -143,7 +143,7 @@ int main(int argc, char** argv)
 		"I Hope I Finish This");
 	window.setFramerateLimit(60);
 	
-	game.game_loop(&window);
+	game.game_loop(window);
 }
 
 Game::Game() noexcept
@@ -157,14 +157,14 @@ Game::Game() noexcept
 	monsters_[id].setPosition(WINDOW_START_WIDTH / 2, WINDOW_START_HEIGHT /2);
 }
 
-void Game::game_loop(sf::RenderWindow* window) noexcept
+void Game::game_loop(sf::RenderWindow& window) noexcept
 {
-	while (window->isOpen()) {
+	while (window.isOpen()) {
 		sf::Event event;
-		while (window->pollEvent(event)) {
+		while (window.pollEvent(event)) {
 			switch (event.type) {
 				case sf::Event::Closed:
-					window->close();
+					window.close();
 					break;
 				default: break;
 			}
@@ -176,24 +176,24 @@ void Game::game_loop(sf::RenderWindow* window) noexcept
 	}
 }
 
-void Game::draw(sf::RenderWindow* window) noexcept
+void Game::draw(sf::RenderWindow& window) noexcept
 {
-	window->clear(sf::Color::Black);
+	window.clear(sf::Color::Black);
 
 	for (auto& i: projectiles_) {
-		window->draw(i.second);
+		window.draw(i.second);
 	}
 
 	for (auto& i: monsters_) {
-		window->draw(i.second);
+		window.draw(i.second);
 	}
 
-	window->draw(player_);
+	window.draw(player_);
 
-	window->display();
+	window.display();
 }
 
-void Game::move_entities(sf::RenderWindow* window) noexcept
+void Game::move_entities(sf::RenderWindow& window) noexcept
 {
 	{
 		sf::Vector2f offset;
@@ -201,9 +201,9 @@ void Game::move_entities(sf::RenderWindow* window) noexcept
 
 #if 0
 		if (0) {
-			auto view_port = window->getView();
+			auto view_port = window.getView();
 			view_port.move(offset);
-			window->setView(view_port);
+			window.setView(view_port);
 		}
 #endif
 	}
@@ -268,10 +268,10 @@ void Game::key_press() noexcept
 		}
 }
 
-void Game::mouse_handle(sf::RenderWindow* window) noexcept
+void Game::mouse_handle(sf::RenderWindow& window) noexcept
 {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		auto projectile = player_.basic_projectile(window->mapPixelToCoords(sf::Mouse::getPosition(*window)), reng_);
+		auto projectile = player_.basic_projectile(window.mapPixelToCoords(sf::Mouse::getPosition(window)), reng_);
 		if (projectile) {
 			int id = IHIFT::new_id();
 			projectiles_[id] = *projectile;

@@ -9,7 +9,7 @@ LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system
 all: $(TARGET)
 
 clean:
-	rm .*.o $(TARGET)
+	rm -f .*.o $(TARGET)
 
 document:
 	doxygen Doxyfile
