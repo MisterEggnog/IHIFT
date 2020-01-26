@@ -5,6 +5,7 @@ CXX=g++
 CXXFLAGS=-Wall -std=c++17 -g -Og
 RCXXFLAGS=-Wall -std=c++17 -O3
 LDFLAGS=-lsfml-graphics -lsfml-window -lsfml-system
+.PHONY=all clean document run
 
 all: $(TARGET)
 
@@ -13,6 +14,9 @@ clean:
 
 document:
 	doxygen Doxyfile
+
+run: $(TARGET)
+	./$(TARGET)
 
 $(TARGET): .entity.o .IHIFT.o .player.o .projectile.o .utils.o .monster.o
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
