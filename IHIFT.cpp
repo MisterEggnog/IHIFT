@@ -138,7 +138,6 @@ int main(int argc, char** argv)
 		std::puts("Pass -h for more info");
 
 	Game game;
-	std::printf("Game init complete. Line %i\n", __LINE__);
 	sf::RenderWindow window(sf::VideoMode(WINDOW_START_WIDTH, WINDOW_START_HEIGHT),
 		"I Hope I Finish This");
 	window.setFramerateLimit(60);
