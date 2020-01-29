@@ -72,6 +72,13 @@ return tex
 
 */
 
+#include <cmath>
+
+sf::Vector2f MisterEggnog::IHIFT::unit_vector(sf::Vector2f vc)
+{
+	return vc * (1 / std::hypot(vc.x, vc.y));
+}
+
 #include <SFML/Window/Keyboard.hpp>
 
 namespace MisterEggnog::IHIFT {

@@ -3,6 +3,7 @@
 #define MISTEREGGNOG_IHIFT_UTILITY_HPP_INCLUDED
 
 #include <memory>
+#include <SFML/System/Vector2.hpp>
 
 // Forward Declarations
 namespace sf {
@@ -23,6 +24,13 @@ constexpr int FRAMES_PER_SECOND = 60;
  * Found in utils.h
  */
 const std::shared_ptr<sf::Texture> get_tile_texture(short x, short y);
+
+/** Get unit vector.
+ * Returns vector pointing in the direction of vc, with a length of 1.
+ * @arg vc: Source of unit vector.
+ * @return Unit vector of vc.
+ */
+sf::Vector2f unit_vector(sf::Vector2f vc);
 
 /** Check left/A key pressed.
  * \return True if user presses '\emoji :arrow_left:' or 'A' key.

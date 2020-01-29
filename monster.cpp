@@ -18,7 +18,6 @@
 #include "monster.hpp"
 #include "projectile.hpp"
 #include "utils.hpp"
-#include <cmath>
 #include <cstdio>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Texture.hpp>
@@ -88,9 +87,7 @@ struct Slime_attacker {
 
 		// Straight to player
 		if (pattern == 0) {
-			auto pointer_to_player = player_position - monster.getPosition();
-				pointer_to_player *= 0.1f / std::hypotf(pointer_to_player.x, pointer_to_player.y);
-//			printf("%f:%f", pointer_to_player.x, pointer_to_player.y);
+			auto pointer_to_player = MisterEggnog::IHIFT::unit_vector(player_position - monster.getPosition());
 
 			auto projectile = IHIFT::Projectile(pointer_to_player, monster.getPosition() + monster.getScale() * 0.5f, base_damage_ + critical_offset(reng), false);
 			projectile.setFillColor(sf::Color::Green);
@@ -100,10 +97,11 @@ struct Slime_attacker {
 		}
 
 		// Ray
+#if 0
 		if (pattern == 1) {
 			auto pointer_to_player = player_position - monster.getPosition();
-//			pointer_to_player
 		}
+#endif
 
 		return projectiles;
 	}

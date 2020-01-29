@@ -17,7 +17,6 @@
 */
 #include "player.hpp"
 #include "utils.hpp"
-#include <cmath>
 
 #ifndef MATH_2PI
 #define MATH_2PI 6.283185307179586472
@@ -126,8 +125,7 @@ std::optional<Projectile> Player::basic_projectile(sf::Vector2f mouse_coord, std
 	basic_time_ ^= basic_time_;
 
 	// This should get the unit vector of the direction.
-	auto direction = mouse_coord - sf::Transformable::getPosition();
-	direction /= std::sqrt(direction.x * direction.x + direction.y * direction.y);
+	auto direction = unit_vector(mouse_coord - sf::Transformable::getPosition());
 
 	// This should give it right speed.
 	direction *= BASIC_SHOT_SPEED;
