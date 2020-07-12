@@ -1,7 +1,6 @@
 html
 *.swp
 IHIFT
-tilesheet.png
 CMakeCache.txt
 CMakeFiles
 *.cmake
