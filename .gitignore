@@ -1,8 +1,8 @@
 html
-*.o
 *.swp
-game
+IHIFT
 tilesheet.png
 CMakeCache.txt
 CMakeFiles
 *.cmake
+Makefile
