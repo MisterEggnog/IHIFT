@@ -1,6 +1,8 @@
 html
-versions
 *.o
 *.swp
 game
 tilesheet.png
+CMakeCache.txt
+CMakeFiles
+*.cmake
