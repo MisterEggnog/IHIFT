@@ -1,7 +1,6 @@
 html
+versions
+*.o
 *.swp
-IHIFT
-CMakeCache.txt
-CMakeFiles
-*.cmake
-Makefile
+game
+tilesheet.png
